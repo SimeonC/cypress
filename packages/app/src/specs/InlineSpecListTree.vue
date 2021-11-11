@@ -50,7 +50,7 @@ type TreeNode<T> = {
 
 const root: TreeNode<FoundSpec> = { name: '/', children: [], isLeaf: true }
 
-function buildTree <T> (path: string, tree: TreeNode<T>, data?: T) {
+function buildSpecTree <T> (path: string, tree: TreeNode<T>, data?: T) {
   const [firstFile, ...rest] = path.split('/')
 
   if (rest.length < 1) {
@@ -62,19 +62,19 @@ function buildTree <T> (path: string, tree: TreeNode<T>, data?: T) {
   const foundChild = tree.children.find((child) => child.name === firstFile)
 
   if (foundChild) {
-    buildTree(rest.join('/'), foundChild)
+    buildSpecTree(rest.join('/'), foundChild)
 
     return tree
   }
 
-  const newTree = buildTree(rest.join('/'), { name: firstFile, isLeaf: false, children: [], parent: tree })
+  const newTree = buildSpecTree(rest.join('/'), { name: firstFile, isLeaf: false, children: [], parent: tree })
 
   tree.children.push(newTree)
 
   return tree
 }
 
-props.specs.forEach((spec) => buildTree<FoundSpec>(spec.relative, root, spec))
+props.specs.forEach((spec) => buildSpecTree<FoundSpec>(spec.relative, root, spec))
 
 function collapseEmptyChildren (node: TreeNode<any>) {
   for (const child of node.children) {
